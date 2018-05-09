@@ -14,7 +14,7 @@ import mcagile.com.domain.Categoria;
 import mcagile.com.services.CategoriaService;
 
 @RestController
-@RequestMapping("/categoria")
+@RequestMapping("/categorias")
 public class CategoriaResource {
 	
 	@Autowired
@@ -22,6 +22,7 @@ public class CategoriaResource {
 	
 	@RequestMapping(value="/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> find(@PathVariable Integer id) {
+		
 		Categoria obj =service.buscar(id);
 		return ResponseEntity.ok().body(obj);
 	}
