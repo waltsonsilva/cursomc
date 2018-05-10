@@ -13,6 +13,7 @@ import mcagile.com.domain.Cidade;
 import mcagile.com.domain.Cliente;
 import mcagile.com.domain.Endereco;
 import mcagile.com.domain.Estado;
+import mcagile.com.domain.ItemPedido;
 import mcagile.com.domain.Pagamento;
 import mcagile.com.domain.PagamentoComBoleto;
 import mcagile.com.domain.PagamentoComCartao;
@@ -25,6 +26,7 @@ import mcagile.com.repositories.CidadeRepository;
 import mcagile.com.repositories.ClienteRepository;
 import mcagile.com.repositories.EnderecoRepository;
 import mcagile.com.repositories.EstadoRepository;
+import mcagile.com.repositories.ItemPedidoRepository;
 import mcagile.com.repositories.PagamentoRepository;
 import mcagile.com.repositories.PedidoRepository;
 import mcagile.com.repositories.ProdutoRepository;
@@ -55,6 +57,9 @@ public class CursomcApplication implements CommandLineRunner {
 
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -121,6 +126,18 @@ public class CursomcApplication implements CommandLineRunner {
 		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
 		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
 
+		ItemPedido ip1 = new ItemPedido(0.00, 1, 2.000, ped1, p1);
+		ItemPedido ip2 = new ItemPedido(0.00, 2, 80.00, ped1, p3);
+		ItemPedido ip3 = new ItemPedido(100.00, 1, 800.00, ped2, p2);
+
+		ped1.getItens().addAll(Arrays.asList(ip1, ip2));
+		ped2.getItens().addAll(Arrays.asList(ip3));
+
+		p1.getItens().addAll(Arrays.asList(ip1));
+		p2.getItens().addAll(Arrays.asList(ip3));
+		p3.getItens().addAll(Arrays.asList(ip2));
+
+		itemPedidoRepository.saveAll(Arrays.asList(ip1, ip2, ip3));
 	}
 
 }
