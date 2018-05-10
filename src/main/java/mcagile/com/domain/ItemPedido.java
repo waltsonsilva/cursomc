@@ -5,26 +5,27 @@ import java.io.Serializable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class ItemPedido implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private double desconto;
-	
+
 	private Integer quantidade;
-	
+
 	private double preco;
+	@JsonIgnore
 	@EmbeddedId
 	private ItemPedidoPk id = new ItemPedidoPk();
-	
-	
+
 	public ItemPedido() {
-		
+
 	}
 
-
-	public ItemPedido(double desconto, Integer quantidade, double preco,  Pedido pedido,Produto produto) {
+	public ItemPedido(double desconto, Integer quantidade, double preco, Pedido pedido, Produto produto) {
 		super();
 		this.desconto = desconto;
 		this.quantidade = quantidade;
@@ -33,11 +34,11 @@ public class ItemPedido implements Serializable {
 		id.setProduto(produto);
 	}
 
-	
+	@JsonIgnore
 	public Pedido getPedido() {
 		return id.getPedido();
 	}
-	
+
 	public Produto getProduto() {
 		return id.getProduto();
 	}
@@ -46,41 +47,33 @@ public class ItemPedido implements Serializable {
 		return desconto;
 	}
 
-
 	public void setDesconto(double desconto) {
 		this.desconto = desconto;
 	}
-
 
 	public Integer getQuantidade() {
 		return quantidade;
 	}
 
-
 	public void setQuantidade(Integer quantidade) {
 		this.quantidade = quantidade;
 	}
-
 
 	public double getPreco() {
 		return preco;
 	}
 
-
 	public void setPreco(double preco) {
 		this.preco = preco;
 	}
-
 
 	public ItemPedidoPk getId() {
 		return id;
 	}
 
-
 	public void setId(ItemPedidoPk id) {
 		this.id = id;
 	}
-
 
 	@Override
 	public int hashCode() {
@@ -89,7 +82,6 @@ public class ItemPedido implements Serializable {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -107,5 +99,5 @@ public class ItemPedido implements Serializable {
 			return false;
 		return true;
 	}
-	
+
 }
