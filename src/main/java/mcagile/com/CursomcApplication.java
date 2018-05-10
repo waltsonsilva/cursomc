@@ -1,5 +1,6 @@
 package mcagile.com;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +13,20 @@ import mcagile.com.domain.Cidade;
 import mcagile.com.domain.Cliente;
 import mcagile.com.domain.Endereco;
 import mcagile.com.domain.Estado;
+import mcagile.com.domain.Pagamento;
+import mcagile.com.domain.PagamentoComBoleto;
+import mcagile.com.domain.PagamentoComCartao;
+import mcagile.com.domain.Pedido;
 import mcagile.com.domain.Produto;
+import mcagile.com.domain.enums.EstadoPagamento;
 import mcagile.com.domain.enums.TipoCliente;
 import mcagile.com.repositories.CategoriaRepository;
 import mcagile.com.repositories.CidadeRepository;
 import mcagile.com.repositories.ClienteRepository;
 import mcagile.com.repositories.EnderecoRepository;
 import mcagile.com.repositories.EstadoRepository;
+import mcagile.com.repositories.PagamentoRepository;
+import mcagile.com.repositories.PedidoRepository;
 import mcagile.com.repositories.ProdutoRepository;
 
 @SpringBootApplication
@@ -35,13 +43,18 @@ public class CursomcApplication implements CommandLineRunner {
 
 	@Autowired
 	private CidadeRepository cidadeRepository;
-	
+
 	@Autowired
 	private ClienteRepository clienteRepository;
-	
+
 	@Autowired
 	private EnderecoRepository enderecoRepository;
-	
+
+	@Autowired
+	private PedidoRepository pedidoRepository;
+
+	@Autowired
+	private PagamentoRepository pagamentoRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -81,15 +94,33 @@ public class CursomcApplication implements CommandLineRunner {
 		cidadeRepository.saveAll(Arrays.asList(ci1, ci2, ci3));
 
 		Cliente cli1 = new Cliente(null, "Maria Silva", "marial@gmail.com", "888888888", TipoCliente.PESSOAJURIDICA);
-		
-		cli1.getTelefones().addAll(Arrays.asList("123123213213" , "993432423"));
+
+		cli1.getTelefones().addAll(Arrays.asList("123123213213", "993432423"));
 		Endereco e1 = new Endereco(null, "Rua Flores", "300", "Apto 303", "Jardias", "3113123213", cli1, ci1);
 		Endereco e2 = new Endereco(null, "Rua Flores", "300", "Apto 303", "Jardias", "3113123213", cli1, ci2);
 
 		cli1.getEnderecos().addAll(Arrays.asList(e1, e2));
-		
+
 		clienteRepository.saveAll(Arrays.asList(cli1));
 		enderecoRepository.saveAll(Arrays.asList(e1, e2));
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+		Pedido ped1 = new Pedido(null, sdf.parse("30/09/2017 10:32"), cli1, e1);
+		Pedido ped2 = new Pedido(null, sdf.parse("10/10/2017 19:35"), cli1, e2);
+
+		Pagamento pagto1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped1, 6);
+		ped1.setPagamento(pagto1);
+
+		Pagamento pagto2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("20/10/2017 00:00"),
+				null);
+		ped2.setPagamento(pagto2);
+
+		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
+
+		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
+		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
+
 	}
 
 }
